@@ -1,0 +1,60 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+build/
+dist/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# Local Databases (personal data)
+*.db
+*.sqlite
+
+# Scholar OS user data
+memory/
+
+# ClipMind AI model weights
+Models/
+models/
+
+# Shot Analyzer outputs
+outputs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Hosting platforms
+.vercel
+.netlify
+
+# Logs
+*.log
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Testing coverage
+coverage/
+.nyc_output
+
+# Xcode
+*.xcuserstate
+userdata/
+DerivedData/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/

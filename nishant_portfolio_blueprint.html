@@ -1,0 +1,785 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .bp-root {
+    background: #000;
+    color: #F5F5F5;
+    min-height: 100vh;
+    padding: 32px 24px;
+    font-family: var(--font-sans);
+  }
+  .bp-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 0.5px solid rgba(255,255,255,0.1);
+  }
+  .bp-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: #555;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .bp-title {
+    font-size: 28px;
+    font-weight: 500;
+    color: #F5F5F5;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .bp-subtitle {
+    font-size: 13px;
+    color: #555;
+    letter-spacing: 0.04em;
+  }
+
+  /* Tabs */
+  .bp-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 28px;
+    background: #0B0B0B;
+    border: 0.5px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+    padding: 4px;
+  }
+  .bp-tab {
+    flex: 1;
+    padding: 8px 6px;
+    font-size: 12px;
+    color: #555;
+    background: transparent;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+    text-align: center;
+  }
+  .bp-tab:hover { color: #A1A1AA; }
+  .bp-tab.active {
+    background: #111;
+    color: #F5F5F5;
+    border: 0.5px solid rgba(255,255,255,0.1);
+  }
+
+  /* Panels */
+  .bp-panel { display: none; }
+  .bp-panel.active { display: block; }
+
+  /* Section cards */
+  .bp-section {
+    background: #080808;
+    border: 0.5px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 12px;
+  }
+  .bp-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .bp-section-num {
+    font-size: 11px;
+    color: #333;
+    letter-spacing: 0.1em;
+    min-width: 24px;
+  }
+  .bp-section-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #E8E8E8;
+    letter-spacing: -0.01em;
+  }
+  .bp-section-tag {
+    margin-left: auto;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #333;
+    border: 0.5px solid #222;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .bp-section-tag.core { color: #777; border-color: #333; }
+
+  /* Rows of items */
+  .bp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .bp-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+  .bp-item {
+    background: #0F0F0F;
+    border: 0.5px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .bp-item-label {
+    font-size: 11px;
+    color: #555;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .bp-item-val {
+    font-size: 13px;
+    color: #C0C0C0;
+    line-height: 1.5;
+  }
+
+  /* Color swatches */
+  .swatch-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .swatch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #0F0F0F;
+    border: 0.5px solid rgba(255,255,255,0.05);
+    border-radius: 7px;
+    padding: 8px 12px;
+    flex: 1;
+    min-width: 120px;
+  }
+  .swatch-dot { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; }
+  .swatch-info { display: flex; flex-direction: column; }
+  .swatch-name { font-size: 11px; color: #777; }
+  .swatch-hex { font-size: 12px; color: #A0A0A0; font-family: var(--font-mono); }
+
+  /* Motion tags */
+  .motion-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+  .motion-pill {
+    font-size: 11px;
+    color: #888;
+    border: 0.5px solid #1E1E1E;
+    background: #0C0C0C;
+    padding: 5px 10px;
+    border-radius: 20px;
+  }
+  .motion-pill.yes { color: #C0C0C0; border-color: #2A2A2A; }
+  .motion-pill.no { color: #3A3A3A; border-color: #161616; text-decoration: line-through; }
+
+  /* Page flow viz */
+  .page-flow { display: flex; flex-direction: column; gap: 2px; }
+  .page-node {
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .page-line-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20px;
+    flex-shrink: 0;
+  }
+  .page-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #333;
+    border: 0.5px solid #555;
+    margin-top: 14px;
+    flex-shrink: 0;
+  }
+  .page-line { flex: 1; width: 0.5px; background: #1A1A1A; margin: 2px 0; }
+  .page-card {
+    flex: 1;
+    background: #0C0C0C;
+    border: 0.5px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin: 4px 0;
+  }
+  .page-card-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #D0D0D0;
+    margin-bottom: 4px;
+  }
+  .page-card-desc { font-size: 12px; color: #484848; line-height: 1.5; }
+  .page-card-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 8px;
+  }
+  .feat-tag {
+    font-size: 10px;
+    color: #505050;
+    border: 0.5px solid #1E1E1E;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  /* Stack */
+  .stack-cat { margin-bottom: 14px; }
+  .stack-cat-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #3A3A3A;
+    margin-bottom: 7px;
+  }
+  .stack-items { display: flex; flex-wrap: wrap; gap: 6px; }
+  .stack-chip {
+    font-size: 12px;
+    color: #909090;
+    background: #0E0E0E;
+    border: 0.5px solid #1F1F1F;
+    padding: 5px 12px;
+    border-radius: 6px;
+  }
+
+  /* Divider */
+  .bp-divider {
+    height: 0.5px;
+    background: rgba(255,255,255,0.05);
+    margin: 16px 0;
+  }
+
+  /* Vibe block */
+  .vibe-block {
+    background: #050505;
+    border: 0.5px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .vibe-block::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.015) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .vibe-quote {
+    font-size: 15px;
+    color: #E0E0E0;
+    line-height: 1.65;
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+  .vibe-attr { font-size: 11px; color: #3A3A3A; margin-top: 10px; letter-spacing: 0.06em; }
+
+  /* Checklist */
+  .checklist { display: flex; flex-direction: column; gap: 7px; }
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: #888;
+    line-height: 1.4;
+  }
+  .check-icon { font-size: 14px; flex-shrink: 0; color: #444; margin-top: 1px; }
+  .check-icon.done { color: #888; }
+</style>
+
+<div class="bp-root">
+  <div class="bp-header">
+    <div class="bp-eyebrow">Portfolio Blueprint — 2026</div>
+    <div class="bp-title">Nishant Bhavsar</div>
+    <div class="bp-subtitle">Minimal Cinematic Interactive Portfolio</div>
+  </div>
+
+  <div class="bp-tabs">
+    <button class="bp-tab active" onclick="showTab('overview')">Overview</button>
+    <button class="bp-tab" onclick="showTab('pages')">Pages</button>
+    <button class="bp-tab" onclick="showTab('visual')">Visual</button>
+    <button class="bp-tab" onclick="showTab('motion')">Motion</button>
+    <button class="bp-tab" onclick="showTab('stack')">Stack</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="bp-panel active" id="tab-overview">
+
+    <div class="vibe-block">
+      <div class="vibe-quote">"An elite young builder obsessed with design, systems, AI, and digital craftsmanship — expressed through restraint, motion, and precision."</div>
+      <div class="vibe-attr">CORE IDENTITY STATEMENT</div>
+    </div>
+
+    <div class="bp-section">
+      <div class="bp-section-header">
+        <div class="bp-section-num">01</div>
+        <div class="bp-section-title">Design Philosophy</div>
+        <div class="bp-section-tag core">Core</div>
+      </div>
+      <div class="bp-grid">
+        <div class="bp-item">
+          <div class="bp-item-label">Mood</div>
+          <div class="bp-item-val">Cinematic · Atmospheric · Luxurious</div>
+        </div>
+        <div class="bp-item">
+          <div class="bp-item-label">Reference Tier</div>
+          <div class="bp-item-val">Aino Agency · Franck Poingt</div>
+        </div>
+        <div class="bp-item">
+          <div class="bp-item-label">Colour Approach</div>
+          <div class="bp-item-val">Near-monochrome · No hues at all</div>
+        </div>
+        <div class="bp-item">
+          <div class="bp-item-label">Design Ethos</div>
+          <div class="bp-item-val">RESTRAINT — know what NOT to add</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bp-section">
+      <div class="bp-section-header">
+        <div class="bp-section-num">02</div>
+        <div class="bp-section-title">What Makes It Elite</div>
+      </div>
+      <div class="checklist">
+        <div class="check-item"><span class="check-icon done">◆</span>Typography drives the entire visual weight — not colors, not gradients</div>
+        <div class="check-item"><span class="check-icon done">◆</span>Motion feels expensive — weighted, smooth, controlled like Framer Motion at its best</div>
+        <div class="check-item"><span class="check-icon done">◆</span>Every interaction is intentional — custom cursor, magnetic buttons, hover physics</div>
+        <div class="check-item"><span class="check-icon done">◆</span>Cinematic pacing — dense sections alternate with pure breathing space</div>
+        <div class="check-item"><span class="check-icon done">◆</span>Film grain + noise texture give it depth without relying on color</div>
+        <div class="check-item"><span class="check-icon done">◆</span>Intro animation is the first handshake — slow, deliberate, unforgettable</div>
+      </div>
+    </div>
+
+    <div class="bp-section">
+      <div class="bp-section-header">
+        <div class="bp-section-num">03</div>
+        <div class="bp-section-title">Feel Targets</div>
+      </div>
+      <div class="motion-grid">
+        <div class="motion-pill yes">Apple Keynote</div>
+        <div class="motion-pill yes">Linear.app energy</div>
+        <div class="motion-pill yes">Vercel precision</div>
+        <div class="motion-pill yes">Art gallery calm</div>
+        <div class="motion-pill yes">Premium UI motion</div>
+        <div class="motion-pill yes">Architecture studio</div>
+        <div class="motion-pill no">Startup landing page</div>
+        <div class="motion-pill no">Neon cyberpunk</div>
+        <div class="motion-pill no">Generic React portfolio</div>
+        <div class="motion-pill no">Overanimated mess</div>
+        <div class="motion-pill no">Colorful sections</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGES -->
+  <div class="bp-panel" id="tab-pages">
+    <div class="page-flow">
+
+      <div class="page-node">
+        <div class="page-line-col">
+          <div class="page-dot" style="background:#888;border-color:#aaa;"></div>
+          <div class="page-line"></div>
+        </div>
+        <div class="page-card">
+          <div class="page-card-name">Cinematic Intro / Loading Screen</div>
+          <div class="page-card-desc">Black screen. Ambient noise texture fades in. Your name appears letter by letter with staggered opacity. Background grid softly reveals. Nav slides in from the left.</div>
+          <div class="page-card-features">
+            <span class="feat-tag">Staggered text reveal</span>
+            <span class="feat-tag">Blur → clear transition</span>
+            <span class="feat-tag">Slow cinematic easing</span>
+            <span class="feat-tag">No fast flashes</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-node">
+        <div class="page-line-col">
+          <div class="page-dot"></div>
+          <div class="page-line"></div>
+        </div>
+        <div class="page-card">
+          <div class="page-card-name">Hero — Fullscreen Landing</div>
+          <div class="page-card-desc">Large typographic hero. "Nishant Bhavsar" in a huge, perfectly spaced heading. Subtitle fades beneath. Subtle noise or starfield background — pure grayscale.</div>
+          <div class="page-card-features">
+            <span class="feat-tag">Huge typography</span>
+            <span class="feat-tag">Noise texture bg</span>
+            <span class="feat-tag">Kinetic subtitle</span>
+            <span class="feat-tag">Scroll cue</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-node">
+        <div class="page-line-col">
+          <div class="page-dot"></div>
+          <div class="page-line"></div>
+        </div>
+        <div class="page-card">
+          <div class="page-card-name">About — Minimal Bio</div>
+          <div class="page-card-desc">No large blocks of text. Lines reveal on scroll with fade-up. "Currently building ·  Current focus · Philosophy." Dynamic status indicator. Class 11 · Developer · AI Enthusiast.</div>
+          <div class="page-card-features">
+            <span class="feat-tag">Line-by-line reveal</span>
+            <span class="feat-tag">Live status tag</span>
+            <span class="feat-tag">Scroll-driven opacity</span>
+            <span class="feat-tag">Left nav icon</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-node">
+        <div class="page-line-col">
+          <div class="page-dot"></div>
+          <div class="page-line"></div>
+        </div>
+        <div class="page-card">
+          <div class="page-card-name">Projects — Design Exhibition</div>
+          <div class="page-card-desc">Fullscreen alternating layout — image left, text right, then reverse. Hover reveals overlay with project details. Each card feels like a product launch mini-page.</div>
+          <div class="page-card-features">
+            <span class="feat-tag">Hover image zoom</span>
+            <span class="feat-tag">Reveal overlays</span>
+            <span class="feat-tag">Alternating layout</span>
+            <span class="feat-tag">Case study feel</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-node">
+        <div class="page-line-col">
+          <div class="page-dot"></div>
+          <div class="page-line"></div>
+        </div>
+        <div class="page-card">
+          <div class="page-card-name">Command Menu (⌘K)</div>
+          <div class="page-card-desc">Hidden interactive command palette. Press ⌘K or click a trigger to reveal. Options: View Projects, About, Current Focus, Contact. Blurred backdrop. Smooth spring animation.</div>
+          <div class="page-card-features">
+            <span class="feat-tag">Keyboard shortcut</span>
+            <span class="feat-tag">Spring animation</span>
+            <span class="feat-tag">Backdrop blur</span>
+            <span class="feat-tag">Easter egg feel</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-node">
+        <div class="page-line-col">
+          <div class="page-dot"></div>
+          <div class="page-line"></div>
+        </div>
+        <div class="page-card">
+          <div class="page-card-name">Contact — Minimal Close</div>
+          <div class="page-card-desc">Simple. Email address as the hero element. Magnetic button for sending. Social links minimal and understated. No forms, no clutter.</div>
+          <div class="page-card-features">
+            <span class="feat-tag">Magnetic button</span>
+            <span class="feat-tag">Text scramble</span>
+            <span class="feat-tag">Animated underline</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-node">
+        <div class="page-line-col">
+          <div class="page-dot" style="background:#222;border-color:#333;"></div>
+        </div>
+        <div class="page-card">
+          <div class="page-card-name">Left Floating Nav (Persistent)</div>
+          <div class="page-card-desc">Vertical pill of icons — always visible. Semi-transparent. Blurred background like Franck Poingt's. Smooth active state indicator that slides between icons.</div>
+          <div class="page-card-features">
+            <span class="feat-tag">Pill container</span>
+            <span class="feat-tag">Backdrop blur</span>
+            <span class="feat-tag">Sliding indicator</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- VISUAL -->
+  <div class="bp-panel" id="tab-visual">
+
+    <div class="bp-section">
+      <div class="bp-section-header">
+        <div class="bp-section-num">01</div>
+        <div class="bp-section-title">Color System — Exact Values</div>
+        <div class="bp-section-tag core">Core</div>
+      </div>
+      <div class="bp-item-label" style="margin-bottom:10px;">Backgrounds</div>
+      <div class="swatch-row">
+        <div class="swatch"><div class="swatch-dot" style="background:#000000;border:0.5px solid #222;"></div><div class="swatch-info"><div class="swatch-name">Pure black</div><div class="swatch-hex">#000000</div></div></div>
+        <div class="swatch"><div class="swatch-dot" style="background:#050505;border:0.5px solid #222;"></div><div class="swatch-info"><div class="swatch-name">Rich black</div><div class="swatch-hex">#050505</div></div></div>
+        <div class="swatch"><div class="swatch-dot" style="background:#0B0B0B;border:0.5px solid #222;"></div><div class="swatch-info"><div class="swatch-name">Soft black</div><div class="swatch-hex">#0B0B0B</div></div></div>
+      </div>
+      <div class="swatch-row">
+        <div class="swatch"><div class="swatch-dot" style="background:#111111;border:0.5px solid #222;"></div><div class="swatch-info"><div class="swatch-name">Elevated surface</div><div class="swatch-hex">#111111</div></div></div>
+        <div class="swatch"><div class="swatch-dot" style="background:#1A1A1A;border:0.5px solid #333;"></div><div class="swatch-info"><div class="swatch-name">Border / line</div><div class="swatch-hex">rgba(255,255,255,0.08)</div></div></div>
+      </div>
+      <div class="bp-divider"></div>
+      <div class="bp-item-label" style="margin-bottom:10px;">Text</div>
+      <div class="swatch-row">
+        <div class="swatch"><div class="swatch-dot" style="background:#F5F5F5;"></div><div class="swatch-info"><div class="swatch-name">Primary</div><div class="swatch-hex">#F5F5F5</div></div></div>
+        <div class="swatch"><div class="swatch-dot" style="background:#A1A1AA;"></div><div class="swatch-info"><div class="swatch-name">Secondary</div><div class="swatch-hex">#A1A1AA</div></div></div>
+        <div class="swatch"><div class="swatch-dot" style="background:#71717A;"></div><div class="swatch-info"><div class="swatch-name">Muted</div><div class="swatch-hex">#71717A</div></div></div>
+      </div>
+      <div class="bp-divider"></div>
+      <div class="bp-item-label" style="margin-bottom:8px;">Absolutely no</div>
+      <div class="motion-grid">
+        <div class="motion-pill no">Blue #0000FF</div>
+        <div class="motion-pill no">Purple gradients</div>
+        <div class="motion-pill no">Neon green</div>
+        <div class="motion-pill no">Orange accents</div>
+        <div class="motion-pill no">Pink highlights</div>
+        <div class="motion-pill no">Any saturated hue</div>
+      </div>
+    </div>
+
+    <div class="bp-section">
+      <div class="bp-section-header">
+        <div class="bp-section-num">02</div>
+        <div class="bp-section-title">Typography</div>
+        <div class="bp-section-tag core">Core</div>
+      </div>
+      <div class="bp-grid">
+        <div class="bp-item">
+          <div class="bp-item-label">Headings (Primary)</div>
+          <div class="bp-item-val">Neue Montreal or General Sans or Satoshi</div>
+        </div>
+        <div class="bp-item">
+          <div class="bp-item-label">Headings (Luxury alt)</div>
+          <div class="bp-item-val">Canela + Editorial New</div>
+        </div>
+        <div class="bp-item">
+          <div class="bp-item-label">Body</div>
+          <div class="bp-item-val">Inter — always</div>
+        </div>
+        <div class="bp-item">
+          <div class="bp-item-label">Style Rule</div>
+          <div class="bp-item-val">Huge, spaced, weighted. Typography IS the design.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bp-section">
+      <div class="bp-section-header">
+        <div class="bp-section-num">03</div>
+        <div class="bp-section-title">Background Texture Details</div>
+      </div>
+      <div class="motion-grid">
+        <div class="motion-pill yes">Film grain overlay</div>
+        <div class="motion-pill yes">Subtle noise texture</div>
+        <div class="motion-pill yes">Faint grid lines</div>
+        <div class="motion-pill yes">Ambient grayscale particles</div>
+        <div class="motion-pill yes">Soft glow diffusion</div>
+        <div class="motion-pill no">Colorful gradients</div>
+        <div class="motion-pill no">Moving mesh backgrounds</div>
+        <div class="motion-pill no">Heavy particle systems</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MOTION -->
+  <div class="bp-panel" id="tab-motion">
+
+    <div class="bp-section">
+      <div class="bp-section-header">
+        <div class="bp-section-num">01</div>
+        <div class="bp-section-title">Animation Philosophy</div>
+        <div class="bp-section-tag core">Core</div>
+      </div>
+      <div class="vibe-block" style="background:#050505;">
+        <div class="vibe-quote">"Motion feels expensive — weighted, controlled, elegant. Not 'a developer added animations.' More like 'a motion designer built this.'"</div>
+      </div>
+      <div class="bp-grid">
+        <div class="bp-item">
+          <div class="bp-item-label">Timing feel</div>
+          <div class="bp-item-val">Weighted · Inertia-based · Never abrupt</div>
+        </div>
+        <div class="bp-item">
+          <div class="bp-item-label">Easing style</div>
+          <div class="bp-item-val">Custom cubic-bezier · Spring physics · Slow deceleration</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bp-section">
+      <div class="bp-section-header">
+        <div class="bp-section-num">02</div>
+        <div class="bp-section-title">Motion Inventory — Yes / No</div>
+      </div>
+      <div class="bp-item-label" style="margin-bottom:8px;">Use these</div>
+      <div class="motion-grid" style="margin-bottom:14px;">
+        <div class="motion-pill yes">Cinematic reveals</div>
+        <div class="motion-pill yes">Ultra-smooth transitions</div>
+        <div class="motion-pill yes">Layered parallax</div>
+        <div class="motion-pill yes">Staggered text reveal</div>
+        <div class="motion-pill yes">Motion blur</div>
+        <div class="motion-pill yes">Elegant fade transitions</div>
+        <div class="motion-pill yes">Smooth opacity shifts</div>
+        <div class="motion-pill yes">Inertia scrolling (Lenis)</div>
+        <div class="motion-pill yes">Subtle hover physics</div>
+        <div class="motion-pill yes">Page transition wipe</div>
+        <div class="motion-pill yes">Blur → clear reveal</div>
+        <div class="motion-pill yes">Slow scale on enter</div>
+      </div>
+      <div class="bp-item-label" style="margin-bottom:8px;">Avoid these</div>
+      <div class="motion-grid">
+        <div class="motion-pill no">Bouncing animations</div>
+        <div class="motion-pill no">Floating random icons</div>
+        <div class="motion-pill no">Spinning objects</div>
+        <div class="motion-pill no">Glitch overload</div>
+        <div class="motion-pill no">Fast flashy motion</div>
+        <div class="motion-pill no">Loud particle effects</div>
+      </div>
+    </div>
+
+    <div class="bp-section">
+      <div class="bp-section-header">
+        <div class="bp-section-num">03</div>
+        <div class="bp-section-title">Microinteractions</div>
+      </div>
+      <div class="bp-grid">
+        <div class="bp-item">
+          <div class="bp-item-label">Custom cursor</div>
+          <div class="bp-item-val">Expands on hover · Magnetic near buttons · Smooth trailing</div>
+        </div>
+        <div class="bp-item">
+          <div class="bp-item-label">Text scramble</div>
+          <div class="bp-item-val">On hover over key words — then settles back</div>
+        </div>
+        <div class="bp-item">
+          <div class="bp-item-label">Magnetic buttons</div>
+          <div class="bp-item-val">Cursor physics pulls buttons slightly toward it</div>
+        </div>
+        <div class="bp-item">
+          <div class="bp-item-label">Animated underlines</div>
+          <div class="bp-item-val">Draw-in on hover with smooth easing</div>
+        </div>
+        <div class="bp-item">
+          <div class="bp-item-label">Reveal masks</div>
+          <div class="bp-item-val">Clip-path animation slides to uncover elements</div>
+        </div>
+        <div class="bp-item">
+          <div class="bp-item-label">Nav indicator</div>
+          <div class="bp-item-val">Smooth sliding dot between icons on the left nav</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bp-section">
+      <div class="bp-section-header">
+        <div class="bp-section-num">04</div>
+        <div class="bp-section-title">Scroll Experience</div>
+      </div>
+      <div class="checklist">
+        <div class="check-item"><span class="check-icon done">◆</span>Lenis smooth scroll — fluid, frictionless, premium feel</div>
+        <div class="check-item"><span class="check-icon done">◆</span>GSAP ScrollTrigger — elements animate in as viewport reaches them</div>
+        <div class="check-item"><span class="check-icon done">◆</span>Cinematic pacing — dense visual impact alternates with empty breathing space</div>
+        <div class="check-item"><span class="check-icon done">◆</span>Progress indicator on the side (like Franck's vertical dots)</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- STACK -->
+  <div class="bp-panel" id="tab-stack">
+
+    <div class="bp-section">
+      <div class="bp-section-header">
+        <div class="bp-section-num">01</div>
+        <div class="bp-section-title">Full Tech Stack</div>
+        <div class="bp-section-tag core">Recommended</div>
+      </div>
+
+      <div class="stack-cat">
+        <div class="stack-cat-label">Frontend Framework</div>
+        <div class="stack-items">
+          <div class="stack-chip">Next.js 14+</div>
+          <div class="stack-chip">TypeScript</div>
+          <div class="stack-chip">Tailwind CSS</div>
+        </div>
+      </div>
+
+      <div class="stack-cat">
+        <div class="stack-cat-label">Motion & Animation</div>
+        <div class="stack-items">
+          <div class="stack-chip">Framer Motion</div>
+          <div class="stack-chip">GSAP + ScrollTrigger</div>
+          <div class="stack-chip">Lenis smooth scroll</div>
+        </div>
+      </div>
+
+      <div class="stack-cat">
+        <div class="stack-cat-label">3D / Subtle Graphics</div>
+        <div class="stack-items">
+          <div class="stack-chip">Three.js</div>
+          <div class="stack-chip">React Three Fiber</div>
+          <div class="stack-chip">Drei</div>
+        </div>
+      </div>
+
+      <div class="stack-cat">
+        <div class="stack-cat-label">UI Components</div>
+        <div class="stack-items">
+          <div class="stack-chip">shadcn/ui</div>
+          <div class="stack-chip">Radix UI (headless)</div>
+        </div>
+      </div>
+
+      <div class="stack-cat">
+        <div class="stack-cat-label">Fonts</div>
+        <div class="stack-items">
+          <div class="stack-chip">Neue Montreal (via fontshare)</div>
+          <div class="stack-chip">Inter (Google Fonts)</div>
+        </div>
+      </div>
+
+      <div class="stack-cat">
+        <div class="stack-cat-label">Deployment</div>
+        <div class="stack-items">
+          <div class="stack-chip">Vercel</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bp-section">
+      <div class="bp-section-header">
+        <div class="bp-section-num">02</div>
+        <div class="bp-section-title">Build Order — Suggested Sequence</div>
+      </div>
+      <div class="checklist">
+        <div class="check-item"><span class="check-icon">1.</span>Set up Next.js + TypeScript + Tailwind — get the base running</div>
+        <div class="check-item"><span class="check-icon">2.</span>Add Lenis + configure smooth scrolling globally</div>
+        <div class="check-item"><span class="check-icon">3.</span>Build the left floating nav with icon pills (match Franck's exactly)</div>
+        <div class="check-item"><span class="check-icon">4.</span>Build the cinematic intro animation (staggered name reveal, grid fade-in)</div>
+        <div class="check-item"><span class="check-icon">5.</span>Build the Hero section with large typography</div>
+        <div class="check-item"><span class="check-icon">6.</span>Add GSAP ScrollTrigger for section reveals</div>
+        <div class="check-item"><span class="check-icon">7.</span>Build About, Projects sections</div>
+        <div class="check-item"><span class="check-icon">8.</span>Add microinteractions — cursor, magnetic buttons, scramble text</div>
+        <div class="check-item"><span class="check-icon">9.</span>Add film grain overlay and noise texture</div>
+        <div class="check-item"><span class="check-icon">10.</span>Polish, tune easing curves, deploy to Vercel</div>
+      </div>
+    </div>
+
+    <div class="bp-section">
+      <div class="bp-section-header">
+        <div class="bp-section-num">03</div>
+        <div class="bp-section-title">The Biggest Secret</div>
+      </div>
+      <div class="vibe-block" style="background:#050505;">
+        <div class="vibe-quote">The reason Aino and Franck feel elite is restraint. They know what NOT to add. Most portfolios overdesign, overanimate, overcrowd. Elite portfolios simplify, refine, and focus on feel. Your worst enemy is the urge to add more.</div>
+        <div class="vibe-attr">DESIGN PRINCIPLE — ABOVE ALL OTHERS</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.bp-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.bp-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>

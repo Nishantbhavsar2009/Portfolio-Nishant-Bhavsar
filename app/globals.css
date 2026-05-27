@@ -1,0 +1,429 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────────
+   DESIGN TOKENS — Global CSS Custom Properties
+   Pure monochrome. No hues. Ever.
+───────────────────────────────────────────── */
+:root {
+  /* Background scale */
+  --bg-primary:  #000000;
+  --bg-rich:     #050505;
+  --bg-soft:     #0B0B0B;
+  --bg-elevated: #111111;
+  --bg-card:     #0D0D0D;
+
+  /* Border / separator */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+
+  /* Text scale */
+  --text-primary:   #F5F5F5;
+  --text-secondary: #A1A1AA;
+  --text-muted:     #71717A;
+  --text-dim:       #3A3A3A;
+
+  /* Typography — chain to Next.js localFont / Google Font CSS variables.
+     next/font/local sets --font-neue-montreal on <html>.
+     next/font/google sets --font-inter on <html>.
+     Falling back to bare names ensures text renders even if JS fails. */
+  --font-display: var(--font-neue-montreal, 'Neue Montreal', 'General Sans', sans-serif);
+  --font-body:    var(--font-inter, 'Inter', sans-serif);
+  --font-mono:    'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  /* Spacing rhythm */
+  --section-padding:    120px;
+  --section-padding-sm:  80px;
+  --container-max:     1280px;
+  --container-padding:   24px;
+
+  /* Cinematic easing curves */
+  --ease-cinema:   cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-reveal:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-magnetic: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+
+  /* Durations */
+  --duration-fast:   200ms;
+  --duration-base:   400ms;
+  --duration-slow:   800ms;
+  --duration-cinematic: 1200ms;
+
+  /* Scrollbar */
+  --scrollbar-width:  4px;
+  --scrollbar-track:  #000000;
+  --scrollbar-thumb:  #1a1a1a;
+  --scrollbar-thumb-hover: #2a2a2a;
+}
+
+/* ─────────────────────────────────────────────
+   GLOBAL RESETS — Precision box model
+───────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+/* ─────────────────────────────────────────────
+   HTML & BODY — Foundation
+───────────────────────────────────────────── */
+html {
+  font-size: 16px;
+  scroll-behavior: auto; /* Lenis handles smooth scrolling — keep this auto */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+  /* Custom scrollbar — WebKit */
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  /* cursor: none is set globally on * above — body inherits it */
+}
+
+/* ─────────────────────────────────────────────
+   CUSTOM SCROLLBAR — Webkit (Chrome, Safari)
+───────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* ─────────────────────────────────────────────
+   TEXT SELECTION — Monochrome ghost
+───────────────────────────────────────────── */
+::selection {
+  background-color: rgba(255, 255, 255, 0.10);
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: rgba(255, 255, 255, 0.10);
+  color: #ffffff;
+}
+
+/* ─────────────────────────────────────────────
+   TYPOGRAPHY DEFAULTS
+───────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+p {
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  /* cursor: none inherited from * reset */
+}
+
+img, video {
+  display: block;
+  max-width: 100%;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+button {
+  background: none;
+  /* cursor: none inherited from * reset */
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+  background: none;
+  outline: none;
+}
+
+/* ─────────────────────────────────────────────
+   FOCUS — Visible for keyboard nav, hidden for mouse
+───────────────────────────────────────────── */
+:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.4);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ─────────────────────────────────────────────
+   UTILITY CLASSES — Film Grain & Noise
+───────────────────────────────────────────── */
+@layer utilities {
+  /* Film grain overlay — add as pseudo-element on sections */
+  .grain {
+    position: relative;
+  }
+
+  .grain::after {
+    content: '';
+    position: fixed;
+    inset: -200%;
+    width: 400%;
+    height: 400%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.4;
+    z-index: 9999;
+    animation: grain-shift 0.5s steps(2) infinite;
+  }
+
+  @keyframes grain-shift {
+    0%  { transform: translate(0, 0); }
+    25% { transform: translate(-2%, -3%); }
+    50% { transform: translate(1%, 2%); }
+    75% { transform: translate(3%, -1%); }
+    100%{ transform: translate(-1%, 3%); }
+  }
+
+  /* Container */
+  .container-main {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  /* Section rhythm */
+  .section-padding {
+    padding-block: var(--section-padding);
+  }
+
+  .section-padding-sm {
+    padding-block: var(--section-padding-sm);
+  }
+
+  /* Text utilities */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Monochrome border */
+  .border-subtle {
+    border: 0.5px solid var(--border);
+  }
+
+  /* Backdrop blur glass */
+  .glass {
+    backdrop-filter: blur(16px) saturate(120%);
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 0.5px solid var(--border);
+  }
+
+  /* Prevent FOUC during animation */
+  .invisible-until-loaded {
+    visibility: hidden;
+  }
+
+  .loaded .invisible-until-loaded {
+    visibility: visible;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   LENIS — Smooth scroll host element
+───────────────────────────────────────────── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────────
+   SKIP LINK — Screen reader / keyboard only
+   Appears visually on :focus-visible
+───────────────────────────────────────────── */
+.skip-link {
+  position:   fixed;
+  top:        16px;
+  left:       50%;
+  translate:  -50% 0;
+  z-index:    99998;
+  padding:    10px 20px;
+  background: #111111;
+  color:      #F5F5F5;
+  font-size:  13px;
+  font-family: var(--font-body);
+  border:     0.5px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  text-decoration: none;
+  white-space: nowrap;
+
+  /* Visually hidden until focused */
+  opacity:    0;
+  pointer-events: none;
+  transform:  translateY(-8px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.skip-link:focus-visible {
+  opacity:       1;
+  pointer-events: auto;
+  transform:     translateY(0);
+  outline:       1.5px solid rgba(255,255,255,0.4);
+  outline-offset: 4px;
+}
+
+/* ─────────────────────────────────────────────
+   FOCUS-VISIBLE — Upgraded keyboard indicator
+───────────────────────────────────────────── */
+:focus-visible {
+  outline:        1.5px solid rgba(255,255,255,0.4) !important;
+  outline-offset: 4px !important;
+  border-radius:  3px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none !important;
+}
+
+/* ─────────────────────────────────────────────
+   LINK RESET — All <a> outside buttons
+───────────────────────────────────────────── */
+a:not([class]) {
+  color:           inherit;
+  text-decoration: none;
+}
+
+/* ─────────────────────────────────────────────
+   NO HORIZONTAL SCROLL — global guard
+───────────────────────────────────────────── */
+body,
+#__next,
+main {
+  max-width:  100vw;
+  overflow-x: hidden;
+}
+
+/* ─────────────────────────────────────────────
+   REDUCED MOTION — disable all animations
+   Framer Motion respects this via useReducedMotion()
+   This CSS layer handles non-FM elements
+───────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1      !important;
+    transition-duration:       0.01ms !important;
+    scroll-behavior:           auto   !important;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   LEFT NAV — Mobile bottom bar (< 768px)
+   Same pill, rotated to horizontal, bottom center
+───────────────────────────────────────────── */
+@media (max-width: 767px) {
+  /* Reposition the nav pill */
+  nav[aria-label="Page navigation"] {
+    left:      50% !important;
+    top:       auto !important;
+    bottom:    20px !important;
+    translate: -50% 0 !important;
+
+    /* Horizontal layout */
+    flex-direction: row !important;
+    padding:        10px 12px !important;
+    gap:            4px !important;
+  }
+
+  /* Hide scroll progress track on mobile — no room in horizontal bar */
+  nav[aria-label="Page navigation"] > div:last-child {
+    display: none !important;
+  }
+
+  /* Hide tooltips — they'd render off-screen on mobile */
+  nav[aria-label="Page navigation"] [role="tooltip"] {
+    display: none !important;
+  }
+
+  /* ⌘J trigger pill — nudge up above the bottom nav */
+  button[aria-label="Open command menu"],
+  button[aria-label="Close command menu"] {
+    bottom: 84px !important;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   SECTION MIN-HEIGHTS — prevent CLS
+   Every section declares its minimum before content loads
+───────────────────────────────────────────── */
+#hero    { min-height: 100svh; }
+#about   { min-height: 100svh; }
+#projects{ min-height: 100svh; }
+#contact { min-height: 70svh;  }
+
+
+/* ─────────────────────────────────────────────
+   LEFT NAV PROGRESS TRACK — hidden on mobile
+───────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .nav-progress-track { display: none !important; }
+}
