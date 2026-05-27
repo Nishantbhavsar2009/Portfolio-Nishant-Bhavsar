@@ -15,7 +15,7 @@ const nextConfig = {
     remotePatterns: [],
   },
   // Allow GSAP + Lenis to work with SSR
-  transpilePackages: ['@studio-freight/lenis'],
+  transpilePackages: ['lenis'],
 };
 
 module.exports = nextConfig;
