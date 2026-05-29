@@ -87,6 +87,17 @@ const PROJECTS: Project[] = [
     image:       '/Images/Scholar OS.png',
     link:        'https://github.com/Nishantbhavsar2009/Scholar-OS',
   },
+  {
+    id:          'p4',
+    number:      '004',
+    title:       'LumaSort',
+    description: 'A safe, local-first macOS Downloads organizer that runs silently every night and sorts your files automatically. AI classification with confidence scoring, full undo support, and a web control panel — zero cloud, zero effort.',
+    tags:        ['Python', 'SQLite', 'Ollama', 'macOS'],
+    year:        '2025',
+    status:      'Live',
+    image:       '/Images/Lumasort image.png',
+    link:        'https://github.com/Nishantbhavsar2009/LumaSort',
+  },
 ]
 
 // ─── Easing ───────────────────────────────────────────────────────────────────
