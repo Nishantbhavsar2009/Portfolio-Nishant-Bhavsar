@@ -531,7 +531,7 @@ export default function Contact(): JSX.Element {
                     whiteSpace:    'nowrap',
                   }}
                 >
-                  Available for work
+                  Available for collaboration
                 </span>
               </div>
 
